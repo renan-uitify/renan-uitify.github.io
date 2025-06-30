@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Purchase Order</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;}
+        .sidebar-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .main-section {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-input {
+            border: 1px solid #e2e8f0;border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            width: 100%;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-input:focus {
+            border-color: #4f46e5;outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+        .form-textarea {
+            min-height: 100px;
+        }
+        .btn {
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.15s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-primary {
+            background-color: #1e293b;color: white;
+        }
+        .btn-primary:hover {
+            background-color: #334155;}
+        .btn-secondary {
+            background-color: #e2e8f0;color: #1e293b;}
+        .btn-secondary:hover {
+            background-color: #cbd5e1;}
+        .table-header th {
+            background-color: #f1f5f9;padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #475569;text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .table-row td {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #e2e8f0;}
+        .table-row:last-child td {
+            border-bottom: none;
+        }
+        .status-tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        .status-paid, .status-received {
+            background-color: #dcfce7;color: #166534;}
+        .status-pending, .status-in-progress {
+            background-color: #ffedd5;color: #9a3412;}
+        .status-owed {
+            background-color: #fee2e2;color: #991b1b;}
+        .coverage-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e2e8f0;}
+        .coverage-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #4f46e5;}
+        .warning-badge {
+            background-color: #fee2e2;color: #b91c1c;border-radius: 0.25rem;
+            padding: 0.125rem 0.375rem;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-8">
+<header class="mb-8">
+<h1 class="text-3xl font-semibold text-gray-800">Purchase Order</h1>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="md:col-span-1">
+<div class="sidebar-card">
+<h2 class="text-lg font-semibold text-gray-700 mb-4">Summary</h2>
+<form class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="po_no">PO No.</label>
+<input class="form-input" id="po_no" name="po_no" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="title">Title</label>
+<input class="form-input" id="title" name="title" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="assignee">Assignee</label>
+<input class="form-input" id="assignee" name="assignee" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="due_date">Due date</label>
+<input class="form-input" id="due_date" name="due_date" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="project">Project</label>
+<input class="form-input" id="project" name="project" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="company">Company</label>
+<input class="form-input bg-gray-200" id="company" name="company" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="notes">Notes</label>
+<textarea class="form-input form-textarea" id="notes" name="notes" rows="4">- 1 pail Gaco S4200
+- 2 gal of Gaco E50
+- 85' of baton
+- 375 LF fiberglass mesh 4" wide
+                        </textarea>
+</div>
+</form>
+</div>
+<div class="sidebar-card">
+<h2 class="text-lg font-semibold text-gray-700 mb-4">Payment Overview</h2>
+<div class="flex items-center justify-center">
+<div class="w-40 h-40 relative">
+<canvas id="paymentChart"></canvas>
+</div>
+<div class="ml-6 space-y-2">
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+<span class="text-sm text-gray-600">Paid $2,000</span>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+<span class="text-sm text-gray-600">Owed $1,000</span>
+</div>
+</div>
+</div>
+</div>
+<div class="sidebar-card">
+<h2 class="text-lg font-semibold text-gray-700 mb-4">Delivery Overview</h2>
+<div class="flex items-center justify-center">
+<div class="w-40 h-40 relative">
+<canvas id="deliveryChart"></canvas>
+</div>
+<div class="ml-6 space-y-2">
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-purple-500 mr-2"></span>
+<span class="text-sm text-gray-600">Received 100 units</span>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-pink-500 mr-2"></span>
+<span class="text-sm text-gray-600">Ordered 20 units</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 space-y-8">
+<div class="main-section">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-semibold text-gray-700">Order List</h2>
+<div class="flex space-x-2">
+<button class="btn btn-secondary">
+<span class="material-icons text-base mr-1">share</span>
+                            Share
+                        </button>
+<button class="btn btn-primary">
+<span class="material-icons text-base mr-1">add</span>
+                            Add Item
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="min-w-full">
+<thead>
+<tr class="table-header">
+<th class="w-12"><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></th>
+<th class="w-16">CCS</th>
+<th>Material</th>
+<th>Unit Type</th>
+<th class="text-right">Quantity</th>
+<th class="text-right">Unit Cost</th>
+<th class="text-right">Subtotal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="table-row">
+<td><input checked="" class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td><span class="material-icons text-gray-500">subject</span> 1111</td>
+<td>BAR JOISTS</td>
+<td>BD</td>
+<td class="text-right">20</td>
+<td class="text-right">$150.00</td>
+<td class="text-right">$1500.00</td>
+</tr>
+<tr class="table-row">
+<td><input checked="" class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td><span class="material-icons text-gray-500">subject</span> 1111</td>
+<td>WOOD BLOCKING</td>
+<td>RL</td>
+<td class="text-right">12</td>
+<td class="text-right">$75.00</td>
+<td class="text-right">$750.00</td>
+</tr>
+<tr class="table-row">
+<td><input checked="" class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td><span class="material-icons text-gray-500">subject</span> 1111</td>
+<td>LIGHT-GAUGE STEEL FRAMING</td>
+<td>BX</td>
+<td class="text-right">8</td>
+<td class="text-right">$75.00</td>
+<td class="text-right">$750.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="font-semibold text-gray-700">
+<td class="text-right py-3" colspan="6">Total</td>
+<td class="text-right py-3">$3,000.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<div class="main-section">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-semibold text-gray-700">Quotes</h2>
+<div class="flex space-x-2">
+<button class="btn btn-secondary">Compare</button>
+<button class="btn btn-primary">New Quote</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="min-w-full">
+<thead>
+<tr class="table-header">
+<th class="w-12"><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></th>
+<th>#</th>
+<th>Supplier</th>
+<th>Status</th>
+<th class="text-right">Amount</th>
+<th class="w-1/4">Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>1</td>
+<td class="flex items-center">ABC Supply <span class="material-icons text-red-500 text-base ml-1">error_outline</span></td>
+<td><span class="status-tag status-in-progress">In Progress</span></td>
+<td class="text-right">$4000</td>
+<td>
+<div class="flex items-center">
+<div class="coverage-bar w-full mr-2">
+<div class="coverage-bar-fill" style="width: 80%;"></div>
+</div>
+                                        80%
+                                    </div>
+</td>
+</tr>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>2</td>
+<td>MetalMax</td>
+<td><span class="status-tag status-in-progress">In Progress</span></td>
+<td class="text-right">$4000</td>
+<td>
+<div class="flex items-center">
+<div class="coverage-bar w-full mr-2">
+<div class="coverage-bar-fill" style="width: 100%;"></div>
+</div>
+                                        100%
+                                    </div>
+</td>
+</tr>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>3</td>
+<td>Convoy Supply</td>
+<td><span class="status-tag status-received">Received</span></td>
+<td class="text-right">$4000</td>
+<td>
+<div class="flex items-center">
+<div class="coverage-bar w-full mr-2">
+<div class="coverage-bar-fill" style="width: 80%;"></div>
+</div>
+                                        80%
+                                    </div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="main-section">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-semibold text-gray-700">Bills (AR)</h2>
+<button class="btn btn-primary">New Bill</button>
+</div>
+<div class="overflow-x-auto">
+<table class="min-w-full">
+<thead>
+<tr class="table-header">
+<th class="w-12"><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></th>
+<th>Bill No.</th>
+<th>Supplier</th>
+<th>Status</th>
+<th>Due Date</th>
+<th class="text-right">Total</th>
+<th class="text-right">Owned</th>
+</tr>
+</thead>
+<tbody>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>12533</td>
+<td>ABC Supply</td>
+<td><span class="status-tag status-pending">Pending</span></td>
+<td>2023-10-26</td>
+<td class="text-right">$4000</td>
+<td class="text-right">$4000</td>
+</tr>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>54388</td>
+<td>MetalMax</td>
+<td><span class="status-tag status-pending">Pending</span></td>
+<td>2023-11-15</td>
+<td class="text-right">$4000</td>
+<td class="text-right">$4000</td>
+</tr>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>21312</td>
+<td>Convoy Supply</td>
+<td><span class="status-tag status-paid">Paid</span></td>
+<td>2023-09-30</td>
+<td class="text-right">$4000</td>
+<td class="text-right">$0.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="font-semibold text-gray-700">
+<td class="text-right py-3" colspan="6">Total Owned</td>
+<td class="text-right py-3">$2,000.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<div class="main-section">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-semibold text-gray-700">Invoices (AP)</h2>
+<button class="btn btn-primary">New Invoice</button>
+</div>
+<div class="overflow-x-auto">
+<table class="min-w-full">
+<thead>
+<tr class="table-header">
+<th class="w-12"><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></th>
+<th>Invoice No.</th>
+<th>Company</th>
+<th>Status</th>
+<th>Due Date</th>
+<th class="text-right">Total</th>
+<th class="text-right">Outstanding</th>
+</tr>
+</thead>
+<tbody>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>12533</td>
+<td>Skyline Supplies</td>
+<td><span class="status-tag status-pending">Pending</span></td>
+<td>2023-10-26</td>
+<td class="text-right">$4000</td>
+<td class="text-right">$4000</td>
+</tr>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>54388</td>
+<td>Titan Tools</td>
+<td><span class="status-tag status-pending">Pending</span></td>
+<td>2023-11-15</td>
+<td class="text-right">$4000</td>
+<td class="text-right">$4000</td>
+</tr>
+<tr class="table-row">
+<td><input class="form-input rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4" type="checkbox"/></td>
+<td>21312</td>
+<td>Pinnacle Distribution</td>
+<td><span class="status-tag status-paid">Paid</span></td>
+<td>2023-09-30</td>
+<td class="text-right">$4000</td>
+<td class="text-right">$0.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="font-semibold text-gray-700">
+<td class="text-right py-3" colspan="6">Total Outstanding</td>
+<td class="text-right py-3">$3,000.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</div>
+</div>
+<script>
+        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+        new Chart(paymentCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Paid', 'Owed'],
+                datasets: [{
+                    data: [2000, 1000],
+                    backgroundColor: ['#22c55e', '#ef4444'], // green-500, red-500
+                    hoverBackgroundColor: ['#16a34a', '#dc2626']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+        const deliveryCtx = document.getElementById('deliveryChart').getContext('2d');
+        new Chart(deliveryCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Received', 'Ordered'],
+                datasets: [{
+                    data: [100, 20],
+                    backgroundColor: ['#a855f7', '#ec4899'], // purple-500, pink-500
+                    hoverBackgroundColor: ['#9333ea', '#db2777']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+
+</body></html>
