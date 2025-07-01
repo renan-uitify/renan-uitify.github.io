@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quote Details</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F3F4F6;color: #1F2937;}
+        .brand-accent {
+            background-color: #3B82F6;
+            color: white;
+        }
+        .brand-accent-text {
+            color: #3B82F6;
+        }
+        .pill {
+            background-color: #E5E7EB;color: #4B5563;}
+        .card {
+            background-color: #FFFFFF;border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);}
+        .input-field {
+            background-color: #F9FAFB;border: 1px solid #D1D5DB;color: #1F2937;border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+        }
+        .table-header {
+            background-color: #F3F4F6;}
+        .table-row:nth-child(odd) {
+            background-color: #FFFFFF;}
+        .table-row:nth-child(even) {
+            background-color: #F9FAFB;}
+        .divider {
+            border-color: #E5E7EB;}
+        .progress-bar-bg {
+            background-color: #E5E7EB;}
+        .progress-bar-fill {
+            background-color: #3B82F6;
+        }
+        .highlight-green {
+            background-color: #10B981;
+            color: white;
+        }
+        .highlight-red {
+            background-color: #EF4444;
+            color: white;
+        }
+        .text-main {
+            color: #1F2937;
+        }
+        .text-subtle {
+            color: #6B7280;
+        }
+        .border-strong {
+            border-color: #D1D5DB;
+        }
+        .bg-subtle {
+            background-color: #F9FAFB;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+<div class="max-w-7xl mx-auto">
+<header class="flex justify-between items-center mb-6">
+<h1 class="text-3xl font-bold text-main">QUOTE</h1>
+<span class="pill text-sm font-medium px-3 py-1 rounded-full">In Progress</span>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<div class="md:col-span-2 card">
+<h2 class="text-xl font-semibold mb-4 text-main">Summary</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-subtle mb-1" for="quote_no">Quote No.</label>
+<input class="input-field w-full" id="quote_no" readonly="" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-subtle mb-1" for="supplier">Supplier</label>
+<input class="input-field w-full" id="supplier" readonly="" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-subtle mb-1" for="quote_date">Quote Date</label>
+<input class="input-field w-full" id="quote_date" readonly="" type="text" value="0002"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-subtle mb-1" for="expiration_date">Expiration Date</label>
+<input class="input-field w-full" id="expiration_date" readonly="" type="text" value="0002"/>
+</div>
+</div>
+</div>
+<div class="card flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-semibold mb-2 text-main">Stats</h2>
+<div class="mb-3">
+<div class="flex justify-between text-sm font-medium text-subtle mb-1">
+<span>Coverage</span>
+<span>80%</span>
+</div>
+<div class="w-full progress-bar-bg rounded-full h-2.5">
+<div class="progress-bar-fill h-2.5 rounded-full" style="width: 80%"></div>
+</div>
+</div>
+</div>
+<div>
+<p class="text-sm font-medium text-subtle">TOTAL</p>
+<p class="text-3xl font-bold text-main">$ 8,000.00</p>
+</div>
+</div>
+</div>
+<div class="card mb-6">
+<h2 class="text-xl font-semibold mb-4 text-main">Attachments</h2>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<div class="text-center">
+<div class="border border-dashed border-strong aspect-square flex items-center justify-center rounded-md mb-2 bg-subtle">
+<span class="material-icons text-subtle text-4xl">insert_drive_file</span>
+</div>
+<p class="text-sm text-main">doc.pdf</p>
+</div>
+<div class="text-center">
+<div class="border border-dashed border-strong aspect-square flex items-center justify-center rounded-md mb-2 bg-subtle">
+<span class="material-icons text-subtle text-4xl">insert_drive_file</span>
+</div>
+<p class="text-sm text-main">doc.pdf</p>
+</div>
+<div class="text-center">
+<div class="border border-dashed border-strong aspect-square flex items-center justify-center rounded-md mb-2 bg-subtle">
+<span class="material-icons text-subtle text-4xl">insert_drive_file</span>
+</div>
+<p class="text-sm text-main">doc.pdf</p>
+</div>
+<div class="text-center">
+<div class="border border-dashed border-strong aspect-square flex items-center justify-center rounded-md mb-2 bg-subtle">
+<span class="material-icons text-subtle text-4xl">insert_drive_file</span>
+</div>
+<p class="text-sm text-main">doc.pdf</p>
+</div>
+</div>
+</div>
+<div class="card mb-6 overflow-x-auto">
+<h2 class="text-xl font-semibold mb-4 text-main">Quote</h2>
+<table class="w-full min-w-[800px] text-sm text-left text-main">
+<thead class="text-xs text-subtle uppercase table-header">
+<tr>
+<th class="p-3 w-10" scope="col"><input class="bg-subtle border-strong rounded focus:ring-blue-500" type="checkbox"/></th>
+<th class="p-3" scope="col">CCS</th>
+<th class="p-3" scope="col">Material</th>
+<th class="p-3 text-center" scope="col">Order <span class="material-icons text-xs align-middle">unfold_more</span></th>
+<th class="p-3" scope="col">Unit Type</th>
+<th class="p-3" scope="col">Quantity</th>
+<th class="p-3" scope="col">Unit Cost</th>
+<th class="p-3" scope="col">Subtotal</th>
+<th class="p-3 text-center" scope="col">Quoted <span class="material-icons text-xs align-middle">unfold_more</span></th>
+<th class="p-3" scope="col">Unit Type</th>
+<th class="p-3" scope="col">Quantity</th>
+<th class="p-3" scope="col">Unit Cost</th>
+<th class="p-3" scope="col">Subtotal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="table-row border-b divider">
+<td class="p-3"><input class="bg-subtle border-strong rounded focus:ring-blue-500" type="checkbox"/></td>
+<td class="p-3"><span class="material-icons text-gray-400 text-base align-middle">drag_indicator</span></td>
+<td class="p-3 font-medium text-main">BAR JOISTS</td>
+<td class="p-3"></td>
+<td class="p-3">BD</td>
+<td class="p-3">20</td>
+<td class="p-3">$150.00</td>
+<td class="p-3">$1500.00</td>
+<td class="p-3"></td>
+<td class="p-3">BD</td>
+<td class="p-3">20</td>
+<td class="p-3">$150.00</td>
+<td class="p-3 highlight-green rounded-md">$1500.00</td>
+</tr>
+<tr class="table-row border-b divider">
+<td class="p-3"><input class="bg-subtle border-strong rounded focus:ring-blue-500" type="checkbox"/></td>
+<td class="p-3"><span class="material-icons text-gray-400 text-base align-middle">drag_indicator</span></td>
+<td class="p-3 font-medium text-main">WOOD BLOCKING</td>
+<td class="p-3"></td>
+<td class="p-3">RL</td>
+<td class="p-3">12</td>
+<td class="p-3">$75.00</td>
+<td class="p-3">$750.00</td>
+<td class="p-3"></td>
+<td class="p-3">RL</td>
+<td class="p-3">12</td>
+<td class="p-3">$75.00</td>
+<td class="p-3 highlight-red rounded-md">$750.00</td>
+</tr>
+<tr class="table-row">
+<td class="p-3"><input class="bg-subtle border-strong rounded focus:ring-blue-500" type="checkbox"/></td>
+<td class="p-3"><span class="material-icons text-gray-400 text-base align-middle">drag_indicator</span></td>
+<td class="p-3 font-medium text-main">LIGHT-GAUGE STEEL FRAMING</td>
+<td class="p-3"></td>
+<td class="p-3">BX</td>
+<td class="p-3">8</td>
+<td class="p-3">$75.00</td>
+<td class="p-3">$750.00</td>
+<td class="p-3"></td>
+<td class="p-3">BX</td>
+<td class="p-3">8</td>
+<td class="p-3">$75.00</td>
+<td class="p-3">$750.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="font-bold text-main border-t-2 divider">
+<td class="p-3 text-right" colspan="7">Total</td>
+<td class="p-3">$1,070.00</td>
+<td class="p-3 text-right" colspan="4">Total</td>
+<td class="p-3">$1,070.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div class="card">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-semibold text-main">Email Thread</h2>
+<button class="brand-accent text-sm font-medium px-4 py-2 rounded-md hover:bg-blue-700">Reply</button>
+</div>
+<div class="space-y-6">
+<div class="flex">
+<img alt="Ethan Clark avatar" class="w-10 h-10 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp5FA3wDyHVxVp75RNI06S0zpjJJoZT85mWVlmKdQXrK9I1F_Sm-tG2JUyEU2c-jIVg_3N2xT57PH9Qq6junGEeMRkXmHyfypmTWHV3bsyjc3Sp-YKuxr7YMCFsu1yngH7z_tw_7KPjvac431AERGjYqsKtMdAhCgMtWP1NvG2mmqhTp0unZwT2D1qJw1txIvm5AZYd7s-6WATom6ZrdXrxaqMUu_L4rgmDWsrvxh7hFx6ZjSxsRKEYHejfer6CofX8laLXfiG9hk"/>
+<div class="bg-subtle p-4 rounded-lg rounded-tl-none flex-1">
+<div class="flex items-center mb-1">
+<span class="font-semibold text-main mr-2">Ethan Clark</span>
+<span class="text-xs text-subtle">9:00 AM</span>
+</div>
+<p class="text-sm text-main mb-3">
+                            Hi Emily,
+                            <br/><br/>
+                            Attached is the quote for the roofing project. Please let me know if you have any questions.
+                            <br/><br/>
+                            Best,
+                            <br/>
+                            Ethan Clark
+                        </p>
+<div class="bg-gray-200 p-3 rounded-md flex items-center justify-between cursor-pointer hover:bg-gray-300">
+<span class="text-sm text-main">Quote #12345</span>
+<span class="material-icons text-subtle">attach_file</span>
+</div>
+</div>
+</div>
+<div class="flex">
+<img alt="Emily Carter avatar" class="w-10 h-10 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo5mUMYhjWMXG5GkE5A3C7eYLT7n8tAPDXXwx9_svmYr46BKGR4TCJ7_rVBgX9qqaTWFtgT1J4SAIiAatGxJ6fvbfGfCtu3XiT6Xy9JZAzWLs70UAwM3HHmxhg_1qLN0XXHAD-rAYXk_nForXR2XOtiZ1QAM8GjqtGGjeSP2Gic5GOFfrGeh4AeMb18qXtHl2lm7efq4cYupVwvS9P8qhuUIDgC4osSvRASTd30guQsIEoAYlcSfNj7Q4eTfNrMVA2WNRcEyotzVc"/>
+<div class="bg-subtle p-4 rounded-lg rounded-tl-none flex-1">
+<div class="flex items-center mb-1">
+<span class="font-semibold text-main mr-2">Emily Carter</span>
+<span class="text-xs text-subtle">10:30 AM</span>
+</div>
+<p class="text-sm text-main">
+                            Hi Team,
+                            <br/><br/>
+                            I've reviewed the quote and have a few questions regarding the material specifications. Could we schedule a quick call to discuss this further?
+                            <br/><br/>
+                            Best,
+                            <br/>
+                            Emily
+                        </p>
+</div>
+</div>
+<button class="text-sm text-blue-600 hover:text-blue-700 font-medium px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 w-full sm:w-auto">See more</button>
+</div>
+</div>
+</div>
+
+</body></html>
