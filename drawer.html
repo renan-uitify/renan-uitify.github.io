@@ -453,24 +453,24 @@ const CVEDrawer = () => {
             <div className="flex flex-wrap gap-3">
               <div className="flex-1 min-w-64">
                 <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 bg-gray-900" />
                   <input
                     type="text"
                     placeholder="Search IP or Hostname"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-750 text-white placeholder-gray-500"
+                    className="w-full pl-9 pr-3 py-2.5 border border-gray-700 bg-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-750 text-white placeholder-gray-500"
                   />
                 </div>
               </div>
-              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white">
-                <option>Firmware → All</option>
+              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white bg-gray-900">
+                <option>Firmware</option>
               </select>
-              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white">
-                <option>OS → All</option>
+              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white bg-gray-900">
+                <option>OS</option>
               </select>
-              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white">
-                <option>Data Fresh → All</option>
+              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white bg-gray-900">
+                <option>Data Fresh</option>
               </select>
             </div>
 
