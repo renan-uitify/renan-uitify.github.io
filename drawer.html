@@ -254,44 +254,50 @@ const CVEDrawer = () => {
             </div>
 
             {/* Attack Path Minimap */}
-            <div className="bg-gray-750 p-5 rounded-xl border border-gray-700 relative">
-              <div className="flex items-center justify-between px-4">
-                <div className="text-center relative z-10">
-                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                    {getDeviceIcon(attackPaths[selectedAttackPath].fromType)}
-                  </div>
-                  <div className="text-sm font-medium text-white">{attackPaths[selectedAttackPath].from}</div>
-                  <div className="text-xs text-gray-400">{attackPaths[selectedAttackPath].fromType}</div>
-                </div>
-                
-                {/* Connection Line */}
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full flex items-center justify-center px-20">
-                    <div className="w-full h-0.5 bg-red-400 relative flex items-center justify-center">
-                      <div className="absolute bg-gray-750 px-2">
-                        <ChevronRight className="w-6 h-6 text-red-400" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="text-center relative z-10">
-                  <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                    <AlertTriangle className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-sm font-medium text-white">CVE-2021-44228</div>
-                  <div className="text-xs text-gray-400">Vulnerability</div>
-                </div>
-                
-                <div className="text-center relative z-10">
-                  <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                    {getDeviceIcon(attackPaths[selectedAttackPath].toType)}
-                  </div>
-                  <div className="text-sm font-medium text-white">{attackPaths[selectedAttackPath].to}</div>
-                  <div className="text-xs text-gray-400">{attackPaths[selectedAttackPath].toType}</div>
-                </div>
-              </div>
-            </div>
+<div className="bg-gray-750 p-5 rounded-xl border border-gray-700">
+  <div className="flex items-center justify-between relative">
+    {/* Source Node */}
+    <div className="text-center z-10 flex-1">
+      <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center mb-2 shadow-lg mx-auto">
+        {getDeviceIcon(attackPaths[selectedAttackPath].fromType)}
+      </div>
+      <div className="text-sm font-medium text-white">{attackPaths[selectedAttackPath].from}</div>
+      <div className="text-xs text-gray-400">{attackPaths[selectedAttackPath].fromType}</div>
+    </div>
+    
+    {/* Connection Line */}
+    <div className="absolute left-1/4 right-1/4 top-1/2 transform -translate-y-1/2 h-0.5 bg-red-400">
+      <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-750 px-2">
+        <ChevronRight className="w-6 h-6 text-red-400" />
+      </div>
+    </div>
+    
+    {/* Vulnerability Node */}
+    <div className="text-center z-10 flex-1">
+      <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center mb-2 shadow-lg mx-auto">
+        <AlertTriangle className="w-6 h-6 text-white" />
+      </div>
+      <div className="text-sm font-medium text-white">CVE-2021-44228</div>
+      <div className="text-xs text-gray-400">Vulnerability</div>
+    </div>
+    
+    {/* Connection Line (second segment) */}
+    <div className="absolute left-1/2 right-1/4 top-1/2 transform -translate-y-1/2 h-0.5 bg-red-400">
+      <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-750 px-2">
+        <ChevronRight className="w-6 h-6 text-red-400" />
+      </div>
+    </div>
+    
+    {/* Target Node */}
+    <div className="text-center z-10 flex-1">
+      <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mb-2 shadow-lg mx-auto">
+        {getDeviceIcon(attackPaths[selectedAttackPath].toType)}
+      </div>
+      <div className="text-sm font-medium text-white">{attackPaths[selectedAttackPath].to}</div>
+      <div className="text-xs text-gray-400">{attackPaths[selectedAttackPath].toType}</div>
+    </div>
+  </div>
+</div>
 
             <div className="text-center">
               <a href="#" className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors px-4 py-2 rounded-lg hover:bg-blue-500/10">
