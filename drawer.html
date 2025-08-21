@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CVEDrawer Demo</title>
+  <!-- React + ReactDOM UMD builds -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Babel Standalone for live TSX transpilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react,typescript">
+    import React, { useState } from "react";
+    import { 
+      ChevronDown, 
+      ChevronUp, 
+      Shield, 
+      AlertTriangle, 
+      Server, 
+      Network, 
+      ChevronLeft, 
+      ChevronRight, 
+      Search, 
+      Filter,
+      Clock,
+      User,
+      Wrench,
+      CheckCircle,
+      XCircle,
+      Eye,
+      ExternalLink,
+      BarChart3,
+      Target,
+      Settings,
+      Users,
+      ShieldCheck,
+      Cpu,
+      HardDrive,
+      Database,
+      Router
+    } from "https://esm.sh/lucide-react@0.344.0";
+
+const CVEDrawer = () => {
+  const [expandedSections, setExpandedSections] = useState({
+    summary: true,
+    attackPaths: false,
+    conditions: false,
+    assets: false,
+    mitigation: false
+  });
+
+  const [selectedCVSSVersion, setSelectedCVSSVersion] = useState('CVSS v4.0');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedAttackPath, setSelectedAttackPath] = useState(0);
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const attackPaths = [
+    { from: 'HMI-GATEWAY-SRV', to: 'OT-HISTORIAN-01', fromType: 'PLC', toType: 'Network' },
+    { from: 'WORKSTATION-02', to: 'DB-SERVER-01', fromType: 'Workstation', toType: 'Database' },
+    { from: 'FIREWALL-MAIN', to: 'WEB-SERVER-03', fromType: 'Firewall', toType: 'Web Server' },
+  ];
+
+  const timelineSteps = [
+    { icon: <Shield className="w-4 h-4" />, risk: 'low', title: 'Discover vulnerable SNMP variables', time: '1m', description: 'Discover SNMP variables that should be read-only but are writable.' },
+    { icon: <AlertTriangle className="w-4 h-4" />, risk: 'medium', title: 'Write to read-only SNMP variables', time: '30s', description: 'Write to read-only SNMP variables.' },
+    { icon: <Shield className="w-4 h-4" />, risk: 'high', title: 'Trigger denial of service condition', time: '1m', description: 'Cause the 44 assets to become unavailable or crash.' }
+  ];
+
+  const conditions = [
+    { condition: '🔀 Wrong ACL', detail: '📊 1404 assets reachable remotely via SNMP on UDP:161', met: true, metric: 'AV:N' },
+    { condition: '🛡 Outdated Firmware', detail: '🔥 44 firewalls with vulnerable firmware > V2.0.28 with SNMP enabled', met: true, metric: 'AC:H' },
+    { condition: '🔀 Wrong ACL', detail: '📊 1404 assets with config requiring low-level SNMP privileges', met: true, metric: 'PR:L' },
+    { condition: '📜 Suspicious log', detail: '📊 10 assets displays unusual SNMP packets in their logs', met: true, metric: 'UI:N' },
+    { condition: '', detail: 'No SNMP packets found to crash any devices.', met: false, metric: 'UI:N' }
+  ];
+
+  const assets = [
+    { name: 'accesspoint5.office', ip: '10.0.0.1/24', firmware: '4.0.0.1', os: 'Cisco', freshness: 1 },
+    { name: 'firewall3.site', ip: '10.1.1.5/16', firmware: '9.0.1', os: 'Cisco', freshness: 4 },
+    { name: 'gateway8.main', ip: '10.1.1.5/16', firmware: '2.5.0', os: 'Cisco', freshness: 4 },
+    { name: 'hmi9.plant', ip: '10.1.1.5/16', firmware: '12.0.1', os: 'Cisco', freshness: 1 }
+  ];
+
+  const mitigations = [
+    { title: 'Firmware Patching', mps: 100, priority: 'Now', type: 'Root Cause Fix', description: 'Upgrade all affected CP 1543-1 modules to firmware V2.0.28+ using TIA Portal. Validate checksums post-installation and conduct failover tests for critical process.' },
+    { title: 'Secure Remote Access', mps: 100, priority: 'Now', type: 'System Hardening', description: 'Upgrade all affected CP 1543-1 modules to firmware V2.0.28+ using TIA Portal. Validate checksums post-installation and conduct failover tests for critical process.' },
+    { title: 'SNMP Anomaly Alerts', mps: 100, priority: 'Next', type: 'Monitoring', description: 'Upgrade all affected CP 1543-1 modules to firmware V2.0.28+ using TIA Portal. Validate checksums post-installation and conduct failover tests for critical process.' }
+  ];
+
+  const renderFreshnessBar = (level) => {
+    const bars = [];
+    for (let i = 0; i < 4; i++) {
+      if (i < level) {
+        bars.push(<div key={i} className="w-3 h-3 bg-green-500 rounded-sm"></div>);
+      } else {
+        bars.push(<div key={i} className="w-3 h-3 bg-gray-600 rounded-sm"></div>);
+      }
+    }
+    return <div className="flex gap-1">{bars}</div>;
+  };
+
+  const getDeviceIcon = (type) => {
+    switch(type) {
+      case 'PLC': return <Cpu className="w-4 h-4 text-blue-400" />;
+      case 'Workstation': return <HardDrive className="w-4 h-4 text-purple-400" />;
+      case 'Firewall': return <Shield className="w-4 h-4 text-orange-400" />;
+      case 'Database': return <Database className="w-4 h-4 text-green-400" />;
+      case 'Web Server': return <Server className="w-4 h-4 text-cyan-400" />;
+      case 'Network': return <Router className="w-4 h-4 text-yellow-400" />;
+      default: return <Server className="w-4 h-4 text-gray-400" />;
+    }
+  };
+
+  return (
+    <div className="w-full max-w-5xl mx-auto bg-gray-900 shadow-2xl rounded-xl overflow-hidden border border-gray-800">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 border-b border-gray-700">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-red-500/10 rounded-lg">
+            <Shield className="w-7 h-7 text-red-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-white">CVE-2016-8562</h1>
+            <p className="text-lg text-gray-300 mt-1">Siemens SIMATIC CP 1543-1 Improper Privilege Management</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 bg-orange-500/10 px-3 py-1 rounded-full">
+            <AlertTriangle className="w-4 h-4 text-orange-400" />
+            <span className="text-sm font-medium text-orange-300">Denial of Service</span>
+          </div>
+          <div className="flex items-center gap-2 bg-red-500/10 px-3 py-1 rounded-full">
+            <Shield className="w-4 h-4 text-red-400" />
+            <span className="text-sm font-medium text-red-300">Critical</span>
+          </div>
+          <div className="ml-auto flex items-center gap-2 text-sm text-gray-400">
+            <Clock className="w-4 h-4" />
+            Last updated: 2 hours ago
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Section */}
+      <div className="border-b border-gray-700">
+        <button
+          onClick={() => toggleSection('summary')}
+          className="w-full p-5 flex items-center justify-between bg-gray-800 hover:bg-gray-750 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors">
+              <BarChart3 className="w-5 h-5 text-blue-400" />
+            </div>
+            <h2 className="text-lg font-semibold text-white">Summary</h2>
+          </div>
+          {expandedSections.summary ? 
+            <ChevronUp className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </button>
+        
+        {expandedSections.summary && (
+          <div className="p-6 bg-gray-800 space-y-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="bg-gray-850 p-4 rounded-xl border border-gray-700 hover:border-blue-500/30 transition-colors text-center">
+                <div className="text-xl font-bold text-blue-400">3.25%</div>
+                <div className="text-xs text-gray-400 mt-1">EPSS</div>
+              </div>
+              <div className="bg-gray-850 p-4 rounded-xl border border-gray-700 hover:border-orange-500/30 transition-colors text-center">
+                <div className="text-xl font-bold text-orange-400">7.3</div>
+                <div className="text-xs text-gray-400 mt-1">CVSS v4</div>
+              </div>
+              <div className="bg-gray-850 p-4 rounded-xl border border-gray-700 hover:border-green-500/30 transition-colors text-center">
+                <div className="text-xl font-bold text-green-400">4/5</div>
+                <div className="text-xs text-gray-400 mt-1">Required Conditions</div>
+              </div>
+              <div className="bg-gray-850 p-4 rounded-xl border border-gray-700 hover:border-purple-500/30 transition-colors text-center">
+                <div className="text-xl font-bold text-purple-400">UDP:161</div>
+                <div className="text-xs text-gray-400 mt-1">Ports</div>
+              </div>
+              <div className="bg-gray-850 p-4 rounded-xl border border-gray-700 hover:border-red-500/30 transition-colors text-center">
+                <div className="text-xl font-bold text-red-400">No</div>
+                <div className="text-xs text-gray-400 mt-1">Public Exploit</div>
+              </div>
+              <div className="bg-gray-850 p-4 rounded-xl border border-gray-700 hover:border-cyan-500/30 transition-colors text-center">
+                <div className="text-xl font-bold text-cyan-400">No</div>
+                <div className="text-xs text-gray-400 mt-1">Listed KEV</div>
+              </div>
+            </div>
+            
+            <div className="border-l-4 border-blue-500 p-4 rounded-lg bg-gray-850">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-1.5 bg-blue-500/10 rounded">
+                  <BarChart3 className="w-4 h-4 text-blue-400" />
+                </div>
+                <h3 className="font-semibold text-white">AI Summary</h3>
+              </div>
+              <p className="text-gray-300 leading-relaxed text-sm">
+                A denial-of-service affected Siemens CP 1543-1 or SIPLUS NET CP 1543-1 modules prior to V2.0.28 could disrupt 44 assets with medium financial impact if authorized users with TIA-Portal and project data access can reach UDP:161 and write to read-only SNMP variables.
+                Patching to Firmware to V2.0.28 or later, restricting UDP:161 to approved systems, and auditing access rights is advised.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Attack Paths Section */}
+      <div className="border-b border-gray-700">
+        <button
+          onClick={() => toggleSection('attackPaths')}
+          className="w-full p-5 flex items-center justify-between bg-gray-800 hover:bg-gray-750 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-red-500/10 rounded-lg group-hover:bg-red-500/20 transition-colors">
+              <Target className="w-5 h-5 text-red-400" />
+            </div>
+            <h2 className="text-lg font-semibold text-white">Attack Paths (8)</h2>
+          </div>
+          {expandedSections.attackPaths ? 
+            <ChevronUp className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </button>
+        
+        {expandedSections.attackPaths && (
+          <div className="p-6 bg-gray-800 space-y-6">
+            {/* Navigation */}
+            <div className="flex items-center justify-between mb-4">
+              <button 
+                onClick={() => setSelectedAttackPath(Math.max(0, selectedAttackPath - 1))}
+                className="p-2 hover:bg-gray-700 rounded-lg text-gray-300 hover:text-white transition-colors disabled:opacity-50"
+                disabled={selectedAttackPath === 0}
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <div className="text-sm font-medium text-gray-300 bg-gray-700 px-4 py-2 rounded-lg">
+                Path {selectedAttackPath + 1} of {attackPaths.length}: {attackPaths[selectedAttackPath].from} → {attackPaths[selectedAttackPath].to}
+              </div>
+              <button 
+                onClick={() => setSelectedAttackPath(Math.min(attackPaths.length - 1, selectedAttackPath + 1))}
+                className="p-2 hover:bg-gray-700 rounded-lg text-gray-300 hover:text-white transition-colors disabled:opacity-50"
+                disabled={selectedAttackPath === attackPaths.length - 1}
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Attack Path Minimap */}
+            <div className="bg-gray-750 p-5 rounded-xl border border-gray-700 relative">
+              <div className="flex items-center justify-between px-4">
+                <div className="text-center relative z-10">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                    {getDeviceIcon(attackPaths[selectedAttackPath].fromType)}
+                  </div>
+                  <div className="text-sm font-medium text-white">{attackPaths[selectedAttackPath].from}</div>
+                  <div className="text-xs text-gray-400">{attackPaths[selectedAttackPath].fromType}</div>
+                </div>
+                
+                {/* Connection Line */}
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full flex items-center justify-center px-20">
+                    <div className="w-full h-0.5 bg-red-400 relative flex items-center justify-center">
+                      <div className="absolute bg-gray-750 px-2">
+                        <ChevronRight className="w-6 h-6 text-red-400" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center relative z-10">
+                  <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                    <AlertTriangle className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-sm font-medium text-white">CVE-2021-44228</div>
+                  <div className="text-xs text-gray-400">Vulnerability</div>
+                </div>
+                
+                <div className="text-center relative z-10">
+                  <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                    {getDeviceIcon(attackPaths[selectedAttackPath].toType)}
+                  </div>
+                  <div className="text-sm font-medium text-white">{attackPaths[selectedAttackPath].to}</div>
+                  <div className="text-xs text-gray-400">{attackPaths[selectedAttackPath].toType}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <a href="#" className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors px-4 py-2 rounded-lg hover:bg-blue-500/10">
+                <ExternalLink className="w-4 h-4" />
+                See full attack path
+              </a>
+            </div>
+
+            {/* Timeline */}
+            <div className="space-y-4">
+              <h3 className="font-medium text-white flex items-center gap-2">
+                <Clock className="w-4 h-4 text-gray-400" />
+                Attack Timeline
+              </h3>
+              {timelineSteps.map((step, index) => (
+                <div key={index} className="flex items-start gap-4 p-3 rounded-lg hover:bg-gray-750 transition-colors">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mt-0.5 ${
+                    step.risk === 'low' ? 'bg-blue-500/20 text-blue-400' :
+                    step.risk === 'medium' ? 'bg-orange-500/20 text-orange-400' :
+                    'bg-red-500/20 text-red-400'
+                  }`}>
+                    {step.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-medium text-white">{step.title}</h4>
+                      <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded">{step.time}</span>
+                    </div>
+                    <p className="text-sm text-gray-300">{step.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Required Conditions Section */}
+      <div className="border-b border-gray-700">
+        <button
+          onClick={() => toggleSection('conditions')}
+          className="w-full p-5 flex items-center justify-between bg-gray-800 hover:bg-gray-750 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-500/10 rounded-lg group-hover:bg-purple-500/20 transition-colors">
+              <Settings className="w-5 h-5 text-purple-400" />
+            </div>
+            <h2 className="text-lg font-semibold text-white">Required Conditions</h2>
+          </div>
+          {expandedSections.conditions ? 
+            <ChevronUp className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </button>
+        
+        {expandedSections.conditions && (
+          <div className="p-6 bg-gray-800 space-y-6">
+            <div className="flex flex-wrap items-center gap-4 p-4 bg-gray-750 rounded-xl">
+              <div className="flex items-center gap-2">
+                <Wrench className="w-4 h-4 text-gray-400" />
+                <span className="text-sm text-gray-300"><strong>Required Tools:</strong> SNMP client</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-gray-400" />
+                <span className="text-sm text-gray-300"><strong>Skill Level:</strong> Intermediate</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-gray-400" />
+                <span className="text-sm text-gray-300"><strong>Time to Develop:</strong> Short (~2h)</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              {['CVSS v4.0', 'CVSS v3.x', 'CVSS v2.0'].map((version) => (
+                <button
+                  key={version}
+                  onClick={() => setSelectedCVSSVersion(version)}
+                  className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                    selectedCVSSVersion === version
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {version}
+                </button>
+              ))}
+            </div>
+
+            <div className="p-4 bg-gray-750 rounded-xl border border-gray-700">
+              <div className="text-white">
+                <span className="font-semibold text-orange-400">NVD 7.3 HIGH</span> → <span className="font-mono text-sm text-gray-300">CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N</span>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto rounded-xl border border-gray-700">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-750">
+                    <th className="p-4 text-left text-gray-300 font-semibold rounded-tl-xl">Condition</th>
+                    <th className="p-4 text-left text-gray-300 font-semibold">Detail</th>
+                    <th className="p-4 text-center text-gray-300 font-semibold">Status</th>
+                    <th className="p-4 text-center text-gray-300 font-semibold rounded-tr-xl">Metric</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-700">
+                  {conditions.map((condition, index) => (
+                    <tr key={index} className="hover:bg-gray-750 transition-colors">
+                      <td className="p-4 text-gray-300">{condition.condition}</td>
+                      <td className="p-4 text-gray-300">{condition.detail}</td>
+                      <td className="p-4 text-center">
+                        {condition.met ? (
+                          <div className="inline-flex items-center gap-1 bg-green-500/10 text-green-400 px-2 py-1 rounded-full text-xs">
+                            <CheckCircle className="w-4 h-4" /> Met
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center gap-1 bg-red-500/10 text-red-400 px-2 py-1 rounded-full text-xs">
+                            <XCircle className="w-4 h-4" /> Not Met
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-4 text-center font-mono text-sm text-gray-400 bg-gray-750 mx-2 rounded">
+                        {condition.metric}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Impacted Assets Section */}
+      <div className="border-b border-gray-700">
+        <button
+          onClick={() => toggleSection('assets')}
+          className="w-full p-5 flex items-center justify-between bg-gray-800 hover:bg-gray-750 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-green-500/10 rounded-lg group-hover:bg-green-500/20 transition-colors">
+              <Users className="w-5 h-5 text-green-400" />
+            </div>
+            <h2 className="text-lg font-semibold text-white">Impacted Assets (99)</h2>
+          </div>
+          {expandedSections.assets ? 
+            <ChevronUp className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </button>
+        
+        {expandedSections.assets && (
+          <div className="p-6 bg-gray-800 space-y-6">
+            <div className="flex flex-wrap gap-3">
+              <div className="flex-1 min-w-64">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search IP or Hostname"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-750 text-white placeholder-gray-500"
+                  />
+                </div>
+              </div>
+              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white">
+                <option>Firmware → All</option>
+              </select>
+              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white">
+                <option>OS → All</option>
+              </select>
+              <select className="px-3 py-2.5 border border-gray-700 rounded-lg bg-gray-750 text-white">
+                <option>Data Fresh → All</option>
+              </select>
+            </div>
+
+            <div className="overflow-x-auto rounded-xl border border-gray-700">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-750">
+                    <th className="p-4 text-left text-gray-300 font-semibold rounded-tl-xl">Asset</th>
+                    <th className="p-4 text-left text-gray-300 font-semibold">IP / Subnet</th>
+                    <th className="p-4 text-left text-gray-300 font-semibold">Firmware</th>
+                    <th className="p-4 text-left text-gray-300 font-semibold">OS</th>
+                    <th className="p-4 text-left text-gray-300 font-semibold rounded-tr-xl">Data Fresh.</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-700">
+                  {assets.map((asset, index) => (
+                    <tr key={index} className="hover:bg-gray-750 transition-colors">
+                      <td className="p-4 font-medium text-white">{asset.name}</td>
+                      <td className="p-4 font-mono text-sm text-gray-300">{asset.ip}</td>
+                      <td className="p-4 text-gray-300">{asset.firmware}</td>
+                      <td className="p-4 text-gray-300">{asset.os}</td>
+                      <td className="p-4">
+                        {renderFreshnessBar(asset.freshness)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="flex justify-center">
+              <div className="inline-flex gap-1 bg-gray-750 p-1 rounded-lg">
+                <button className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-sm">1</button>
+                <button className="px-3 py-1.5 rounded-md hover:bg-gray-700 text-gray-300 text-sm transition-colors">2</button>
+                <button className="px-3 py-1.5 rounded-md hover:bg-gray-700 text-gray-300 text-sm transition-colors">3</button>
+                <span className="px-3 py-1.5 text-gray-500 text-sm">...</span>
+                <button className="px-3 py-1.5 rounded-md hover:bg-gray-700 text-gray-300 text-sm transition-colors">25</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Mitigation Section */}
+      <div>
+        <button
+          onClick={() => toggleSection('mitigation')}
+          className="w-full p-5 flex items-center justify-between bg-gray-800 hover:bg-gray-750 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-cyan-500/10 rounded-lg group-hover:bg-cyan-500/20 transition-colors">
+              <ShieldCheck className="w-5 h-5 text-cyan-400" />
+            </div>
+            <h2 className="text-lg font-semibold text-white">Mitigation (4)</h2>
+          </div>
+          {expandedSections.mitigation ? 
+            <ChevronUp className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </button>
+        
+        {expandedSections.mitigation && (
+          <div className="p-6 bg-gray-800 space-y-6">
+            <div className="grid gap-4">
+              {mitigations.map((mitigation, index) => (
+                <div key={index} className="border border-gray-700 rounded-xl p-5 bg-gray-750 hover:border-cyan-500/30 transition-colors">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+                    <h3 className="font-semibold text-lg text-white">{mitigation.title}</h3>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="bg-blue-500/20 text-blue-400 text-xs px-2.5 py-1.5 rounded-full">MPS {mitigation.mps}</span>
+                      <span className={`text-xs px-2.5 py-1.5 rounded-full ${
+                        mitigation.priority === 'Now' ? 'bg-red-500/20 text-red-400' : 'bg-orange-500/20 text-orange-400'
+                      }`}>
+                        {mitigation.priority}
+                      </span>
+                      <span className="bg-gray-700 text-gray-300 text-xs px-2.5 py-1.5 rounded-full">{mitigation.type}</span>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 text-sm leading-relaxed">{mitigation.description}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex justify-center">
+              <div className="inline-flex gap-1 bg-gray-750 p-1 rounded-lg">
+                <button className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-sm">1</button>
+                <button className="px-3 py-1.5 rounded-md hover:bg-gray-700 text-gray-300 text-sm transition-colors">2</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<CVEDrawer />);
+  </script>
+</body>
+</html>
